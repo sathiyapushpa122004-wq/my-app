@@ -1,0 +1,21 @@
+trigger:
+- main   # Pipeline runs when you push to main branch
+
+pool:
+  vmImage: 'ubuntu-latest'   # Use Microsoft-hosted agent
+
+steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'      # Change if pom.xml is inside my-app/
+    goals: 'clean package'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '17'
+    mavenVersionOption: 'Default'
+
+# Save build output (JAR)
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish artifact'
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/target'
+    artifact: 'maven-build'
